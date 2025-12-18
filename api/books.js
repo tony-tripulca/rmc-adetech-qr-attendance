@@ -1,6 +1,6 @@
 const books = [
   { id: 1, title: 'Clean Code' },
-  { id: 2, title: 'You Don’t Know JS' }
+  { id: 2, title: 'You Don\'t Know JS' }
 ];
 
 module.exports = function bookService(req, res) {
