@@ -23,8 +23,16 @@ module.exports = async function router(req, res) {
   }
 
   // ignore query strings
-  const url = req.url.split('?')[0];
-  const match = matchRoute(routes, req.method, url);
+  const originalUrl = req.url.split('?')[0];
+
+  // try matching as-is (localhost)
+  let match = matchRoute(routes, req.method, originalUrl);
+
+  // if not found, try stripping /api (Vercel)
+  if (!match && originalUrl.startsWith('/api/')) {
+    const strippedUrl = originalUrl.slice(4);
+    match = matchRoute(routes, req.method, strippedUrl);
+  }
 
   if (!match) {
     send404(res);
@@ -33,3 +41,4 @@ module.exports = async function router(req, res) {
 
   return match.handler(req, res, match.id);
 };
+
