@@ -1,31 +1,20 @@
 const http = require('http');
-const { notFound, badRequest } = require('./lib/response');
-const { urlParser } = require('./lib/url-parser');
-
-// map resources to handlers
-const routes = {
-  users: require('./api/users')
-};
+const path = require('path');
+const { notFound } = require('./lib/response');
 
 const router = http.createServer((req, res) => {
-  const parsed = urlParser(req);
+  try {
+    // strip leading slash
+    const filePath = req.url.split('?')[0].replace(/^\/+/, '');
 
-  if (parsed.error) {
-    return badRequest(res, parsed.error);
+    // api/users/list → api/users/list.js
+    const handler = require(path.join(__dirname, filePath));
+
+    return handler(req, res);
+  } catch (err) {
+    console.error(err);
+    return notFound(res);
   }
-
-  const { resource, action, query } = parsed;
-  const handler = routes[resource];
-
-  if (!handler) {
-    return notFound(res, 'API resource not found');
-  }
-
-  // attach parsed data to req
-  req.action = action;
-  req.query = query;
-
-  handler(req, res);
 });
 
 module.exports = router;

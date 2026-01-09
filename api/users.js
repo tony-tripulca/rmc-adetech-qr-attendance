@@ -4,13 +4,6 @@ const { bodyParser } = require('../lib/body-parser');
 module.exports = async (req, res) => {
   const { action, query } = req;
 
-  // GET /api/users/list
-  if (req.method === 'GET' && action === 'list') {
-    return okay(res, {
-      users: [],
-      message: 'List users'
-    });
-  }
 
   // POST /api/users/create
   if (req.method === 'POST' && action === 'create') {
