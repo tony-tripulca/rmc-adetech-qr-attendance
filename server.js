@@ -1,5 +1,5 @@
 const staticServer = require('./lib/static');
-const apiRouter = require('./router');
+const apiRouter = require('./lib/router');
 
 const STATIC_PORT = 3000;
 const API_PORT = 8000;
