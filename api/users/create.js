@@ -1,8 +1,9 @@
-const { okay, badRequest, notAllowed } = require('../../lib/response');
-const { bodyParser } = require('../../lib/body-parser');
+require("../models");
+const { okay, badRequest, notAllowed } = require("../../lib/response");
+const { bodyParser } = require("../../lib/body-parser");
 
 module.exports = async (req, res) => {
-  if (req.method !== 'POST') {
+  if (req.method !== "POST") {
     return notAllowed(res);
   }
 
@@ -15,11 +16,10 @@ module.exports = async (req, res) => {
   }
 
   if (!body.name) {
-    return badRequest(res, 'name is required');
+    return badRequest(res, "name is required");
   }
 
-  return okay(res, {
-    message: 'User created',
-    user: body
-  });
+  global.users.push(body);
+
+  return okay(res, body);
 };

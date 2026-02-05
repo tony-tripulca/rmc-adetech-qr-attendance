@@ -9,8 +9,19 @@ module.exports = async (req, res) => {
     return badRequest(res, 'id is required');
   }
 
-  return okay(res, {
-    id: req.query.id,
-    message: 'User updated'
-  });
+  console.log(req.query);
+
+  const index = users.findIndex(u => u.id === req.query.id);
+
+  if (index === -1) {
+    return badRequest(res, 'User not found');
+  }
+
+  // PATCH behavior: merge fields
+  users[index] = {
+    ...users[index],
+    ...req.body
+  };
+
+  return okay(res, users[index]);
 };
